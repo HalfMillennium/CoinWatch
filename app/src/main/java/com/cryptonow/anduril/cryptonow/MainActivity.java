@@ -93,18 +93,29 @@ public class MainActivity extends AppCompatActivity {
             txtJson = result;
 
             try {
-                JSONObject articles = new JSONObject(txtJson);
+                JSONObject full = new JSONObject(txtJson);
+                writeToFile(txtJson, MainActivity.this);
+                JSONArray articles = new JSONArray(full.get("articles"));
+                Log.d("TITLE", "test");
 
-                Iterator<?> keys = articles.keys();
-                while(keys.hasNext() ) {
-                    String key = (String)keys.next();
-                    if (articles.get(key) instanceof JSONObject) {
-                        JSONObject x = new JSONObject(articles.get(key).toString());
-                        Log.d("TEST", x.getString("title"));
-                    }
+                for(int i = 0; i < articles.length(); i++)
+                {
+                    JSONObject obj = articles.getJSONObject(i);
+                    Log.d("TITLE", obj.get("title").toString());
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+
+        public void writeToFile(String data, Context context) {
+            try {
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("articles.json", Context.MODE_PRIVATE));
+                outputStreamWriter.write(data);
+                outputStreamWriter.close();
+            }
+            catch (IOException e) {
+                Log.e("Exception", "File write failed: " + e.toString());
             }
         }
     }
