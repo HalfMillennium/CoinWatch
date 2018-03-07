@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/line_a"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bitcoin has reached an all-time high"
+        android:textColor="#090909"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/line_b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fox News"
+        android:textColor="#090909"
+        android:textSize="12sp"
+        android:textStyle="italic"/>
+
+    <TextView
+        android:id="@+id/line_c"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fox News can confirm that the above headline is accurate."
+        android:textColor="#292929"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/line_d"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="6-mar-2018"
+        android:textColor="#292929"
+        android:textSize="10sp"
+        android:textStyle="italic"/>
+
+</LinearLayout>
