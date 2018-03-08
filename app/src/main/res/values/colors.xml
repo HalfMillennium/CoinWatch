@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="randomColor">#343434</color>
-    <color name="ColorPrimary">#00897B</color>
-    <color name="ColorPrimaryDark">#00695C</color>
+    <color name="ColorPrimary">#f5f6f7</color>
+    <color name="ColorPrimaryDark">#dcddde</color>
+    <color name="TitleColor">#323232</color>
 </resources>

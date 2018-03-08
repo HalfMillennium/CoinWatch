@@ -6,4 +6,15 @@
     android:elevation="2dp"
     android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
     android:text="CryptoNEWS"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="18sp"
+        android:textColor="@color/TitleColor"
+        android:id="@+id/toolbar_title"
+        android:fontFamily="sans-serif-thin"/>
+
+</android.support.v7.widget.Toolbar>

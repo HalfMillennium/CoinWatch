@@ -1,14 +1,28 @@
 package com.cryptonow.anduril.cryptonow;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+
+import com.google.android.gms.ads.MobileAds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,17 +56,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        MobileAds.initialize(this, "ca-app-pub-4748698902608744~4165370052");
+
         Toolbar toolbar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.mipmap.ic_launcher);
+        getSupportActionBar().setLogo(R.drawable.ic_action_coin_watch_logo_app);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
-
-        /*
-        Toolbar toolbar = findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
-        */
+        getSupportActionBar().setTitle("");
 
         new JsonTask().execute("https://newsapi.org/v2/everything?q=bitcoin AND (cryptocurrency OR ethereum)&language=en&sortBy=publishedAt&pageSize=100&apiKey=7b9a5818d54749d4b91fcb7639bd3278");
     }
@@ -74,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<JSONObject> art = new ArrayList<>();
         HashMap<String,String> item;    //Used to link data to lines
 
-        String[] titles, desc, names, dates;
+        String[] titles, desc, names, dates, urls;
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -139,17 +151,32 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject txt = new JSONObject(txtJson);
                 JSONArray articles = txt.getJSONArray("articles");
 
+                int[] removal = new int[articles.length()];
+
                 Log.d("test-tag", "" + articles.length());
-
-
-                buildList(articles);
 
 
                 for(int i = 0; i < articles.length(); i++)
                 {
                     JSONObject obj = articles.getJSONObject(i);
-                    Log.d("thethirdroom", obj.toString());
+                    JSONObject s = obj.getJSONObject("source");
+
+                    if(s.get("name").toString().equals("Python.org"))
+                    {
+                        removal[i] = 1;
+                    }
                 }
+
+                for(int i = 0; i < removal.length; i++)
+                {
+                    if(removal[i] == 1)
+                    {
+                        articles.remove(i);
+                    }
+                }
+
+                buildList(articles);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -181,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
             desc = new String[arr.length()];
             names = new String[arr.length()];
             dates = new String[arr.length()];
+            urls = new String[arr.length()];
+
 
 
             for(int i = 0; i < arr.length(); i++)
@@ -196,7 +225,10 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject source = article.getJSONObject("source");
                     names[i] = source.get("name").toString();
 
+                    // get and parse date
                     dates[i] = formatDate(article.get("publishedAt").toString().substring(0, 10));
+
+                    urls[i] = article.get("url").toString();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -218,23 +250,22 @@ public class MainActivity extends AppCompatActivity {
                     new String[] { "line1","line2", "line3", "line4"},
                     new int[] {R.id.line_a, R.id.line_b, R.id.line_c, R.id.line_d});
             //Link the Adapter to the list
-            ((ListView)findViewById(R.id.articleView)).setAdapter(sa);
+
+            ListView articleList = (ListView)findViewById(R.id.articleView);
+
+            articleList.setAdapter(sa);
+
+            articleList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Uri uri = Uri.parse(urls[position]);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            });
         }
 
 
     }
 }
-
-/*
----UNNEEDED FILE WRITER--
-        private void writeToFile(String data, Context context) {
-            try {
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("articles.json", Context.MODE_PRIVATE));
-                outputStreamWriter.write(data);
-                outputStreamWriter.close();
-            }
-            catch (IOException e) {
-                Log.e("Exception", "File write failed: " + e.toString());
-            }
-        }
-        */
